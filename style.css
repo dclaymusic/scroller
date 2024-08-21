@@ -1,0 +1,128 @@
+/* Template for an EMBEDDED widget */
+
+html {
+    background-color: black; 
+}
+
+body {
+    margin: 0px;
+    padding: 0px; 
+    overflow:hidden;       
+}
+
+@font-face {
+    font-family: 'Andika';
+    src: url(andika.ttf);
+    }
+
+#buttondiv {
+    margin: auto;
+    text-align: center;
+    font-size: 2rem;
+}
+
+button { font-size: 1.5rem; }
+
+canvas {
+    display: block;
+    margin: auto;
+    padding: 0px;
+    width: 980px;
+    height: 600px;
+    overflow:hidden;
+    image-rendering: pixelated;
+
+}
+
+#time { 
+    font-family: Andika;
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+}
+image {
+    image-rendering: pixelated;
+}
+
+#main {
+    position: relative;
+    display: block;
+}
+
+#loadscreen {
+    /* center width - 290 */
+    /* center height - 180 */
+    font-family: Verdana;
+    visibility: hidden;
+    position: absolute;
+    left: 200px;
+    top: 40px;
+    border-radius: 10px;
+    background-color: #807c80;
+    width: 580px;
+    height: 360px;
+    text-align: center;
+}
+
+#title {
+    font-size: 20px;
+    color: black;
+}
+
+#titleimg {
+    width: 580px;
+    height: 200px;
+    padding: 0px;
+    margin: 0px;
+}
+
+#description {
+    padding: 0px;
+    margin: 0px;
+    line-height: 1.4;
+    font-size: 16px;
+    word-wrap: normal;
+    color: white;
+}
+
+#loadtext {
+    /* all px relative to loadscreen */
+    font-size: 12px;
+    position: absolute;
+    left: 220px;
+    top: 310px;
+    color: white;
+}
+
+#loadbarfull, #loadbarloading {
+    /* all px relative to loadscreen */
+    position: absolute;
+    border: 1px solid black;
+    border-radius: 5px;
+    left: 190px;
+    top: 280px;
+    background-color: #f0ebf0;
+    height: 30px;
+    width: 200px;
+    text-align: center;
+}
+
+#loadbarloading {
+    background-color: #ff0000;
+}
+
+#infoimg {
+    visibility: hidden;
+    opacity: 0.5;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 390px;
+    left: 930px;
+}
+
+#infotext {
+    visibility: hidden;
+    font-size: 10px;
+    
+}

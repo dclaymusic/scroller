@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<title>MUSICAL OBSTACLE COURSE</title>
+<script src="snd.js"></script>
+<script src="bg.js"></script>
+<script src="notes.js"></script>
+<script src="mouse.js"></script>
+<script src="start.js"></script>
+<script type="text/javascript">
+
+
+var soundOn = false;
+    var topColor = 'rgba(255, 184, 69,1)'
+    var middleColor = 'rgba(255, 115, 119, 1)'
+    var bottomColor = 'rgba(115, 159, 255, 1)'
+    var hasStarted = false;
+    var infoWindow = false;
+    var isScrolling = false;
+    var scrollPos;
+    let drum, xylo, metal, imageXY;
+    var time = 0;
+
+    const scale = 2;
+    const w = 980;
+    const h = 800;
+    const width = 980*scale;
+    const height = 800*scale;
+    const tileW = 40;
+    const tileH = 40;
+    let timer;
+    var tempo = 1/50;
+    var offset = 400;
+    var currentSpeed = 1;
+    var alpha = [1.0,1.0,1.0];
+    var firstPlay = true;
+    var currentOffset = [0,0,0];
+
+    const numberOfSounds = 1;
+
+    var ctx = null;
+    var currentSecond = 0, frameCount = 0, framesLastSecond = 0, lastFrameTime = 0;
+    var mousePos = [];
+    var currentNotes = [];
+
+    const audioCtx = new AudioContext();
+    let bg = audioCtx.createBufferSource();
+    //var masterGain = audioCtx.createGain();
+    loadBg();
+    //Viewport Scanning
+    var viewport = { screen : [0,0] };
+
+    window.onload = function()
+    {
+        ctx = document.getElementById('game').getContext("2d");
+        requestAnimationFrame(drawGame);
+        ctx.font = "bold 10pt sans-serif";
+
+        //window.addEventListener('mousemove', function(e) { getHoverOver(e) });
+        window.addEventListener('click', function(e) { clickHandler(e) });
+        window.addEventListener('mousemove', function(e) { mousePos = getHoverOver(e); });
+        
+        viewport.screen = [document.getElementById('game').width,
+            document.getElementById('game').height];
+
+        scrollPos = viewport.screen[0];
+        //tileset code goes here
+
+        imageXY = 300;
+        drum = new Image(imageXY, imageXY);
+        xylo = new Image(imageXY, imageXY);
+        metal = new Image(imageXY, imageXY)
+        drum.src = "img/drum.png";
+        xylo.src = "img/xylo.png";
+        metal.src = "img/metal.png";
+
+        cat = new Image(50, 50);
+        ghost = new Image(50, 50);
+        pumpkin = new Image(50, 50)
+        cat.src = "img/cat.png";
+        ghost.src = "img/ghost.png";
+        pumpkin.src = "img/pumpkin.png";
+
+    };
+
+    function drawGame()
+    {
+        if(ctx==null) { return; }
+        var currentFrameTime = Date.now();
+        var timeElapsed = currentFrameTime - lastFrameTime;
+        var sec = Math.floor(Date.now()/1000);
+        if(sec!=currentSecond)
+        {
+            currentSecond = sec;
+            framesLastSecond = frameCount;
+            frameCount = 1;
+        }
+        else { frameCount++; }
+
+        //////////////////////////////draw background
+        ctx.fillStyle = "#1f1f1f";
+        ctx.fillRect(0, 0, viewport.screen[0], viewport.screen[1]);
+
+        if(hasStarted) //app is playing 
+        { 
+
+            if(isScrolling)
+            {
+                updateClock();
+                drawBackground();
+                drawNotes();
+                drawSidebar();
+
+                // if(scrollPos <= viewport.screen[0])
+                // { isScrolling = false; }
+            }
+
+            // //draw hover-over shape
+            // ctx.fillStyle = "white";
+            // ctx.fillRect(mousePos[0]*tileW,mousePos[1]*tileH,tileW,tileH); //for pixel version, no *tileW/*tileH
+            
+        }
+        else if(!hasStarted) //loading sounds
+        { loadbarHandler(); }
+
+        // frameRate();
+        lastFrameTime = currentFrameTime;
+        requestAnimationFrame(drawGame);
+    }
+
+
+</script>
+
+</head>
+<body>
+<div id="main">
+    <div id="loadscreen">
+        <img id="titleimg" src="title.png">
+        <p id="description">Click on the boxes in a row to sequence sounds, <br> 
+            or click the wiggly arrow to shuffle sounds. <br> 
+            Click the triangle to play a track.</p>
+        <div id="loadbarfull"> </div>
+        <div id="loadbarloading"></div>
+        <p id="loadtext">sounds are loading...</p>
+        <p id="infotext">c. 2023 Danny Clay, all rights reserved.</p> 
+    </div>
+    <!-- <img id="infoimg" src="info.png" onclick="toggleInfo()"> -->
+	<canvas id="game" width="1960" height="1200"></canvas>
+    <div id="buttondiv">
+        <button onclick="updateSpeed(1)">Slow</button>
+        <button onclick="updateSpeed(1.5)">Medium</button>
+        <button onclick="updateSpeed(2)">Fast</button>
+    </div>
+    <p id="time">0:00</p>
+
+</div> 
+</body>
+</html>
